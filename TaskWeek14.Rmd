@@ -1,0 +1,71 @@
+---
+title: "Task for week 14"
+output: Nikolaj Dencker
+date: "2024-04-03"
+
+
+```{r}
+library(tidyverse)
+library(googlesheets4)
+library(leaflet)
+```
+
+```{r}
+places <- read.csv("CapturingCoordinates - DM2023 (1).csv")
+```
+
+```{r}
+glimpse(places)
+```
+
+
+# load the coordinates in the map and check: are any points missing? Why?
+```{r}
+DANmap <- leaflet() %>% 
+  addTiles() %>% 
+  addMarkers(lng = places$Longitude, 
+             lat = places$Latitude,
+             popup = places$Description)
+```
+
+
+# Task 2: Read in the googlesheet data you and your colleagues 
+# populated with data into the DANmap object you created in Task 1.
+```{r}
+DANmap
+```
+# Task 3: Can you cluster the points in Leaflet? Google "clustering options in Leaflet"
+
+```{r}
+DANmap_clusters <- leaflet() %>% 
+  addTiles() %>% 
+  addProviderTiles("OpenStreetMap.France") %>%
+  addMarkers(lng = places$Longitude, 
+             lat = places$Latitude,
+             popup = places$Description,
+             clusterOptions = markerClusterOptions())
+
+DANmap_clusters
+```
+
+# Task 4: Look at the map and consider what it is good for and what not.
+
+# It provides a good amount of information to the viewer in a short time, but it does lack a certain amount of detail, that
+# the previous map was good at showing. 
+
+
+# Task 5: Find out how to display notes and classifications in the map.
+```{r}
+DANmap_popups <- leaflet() %>% 
+  addTiles() %>% 
+  addProviderTiles("OpenStreetMap.France") %>%
+  addMarkers(lng = places$Longitude, 
+             lat = places$Latitude,
+             popup = paste(
+             "By:",places$Placename, "<br>",
+             "Type:", places$Type,"<br>",
+             "Description:", places$description), 
+             clusterOptions = markerClusterOptions())
+DANmap_popups 
+```
+
